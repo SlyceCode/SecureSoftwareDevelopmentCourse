@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2^t2#r4+%dx&&lr-o!-t)5-(+1o4es#fs3#%*$-4x4)9h1n0vo' # nosec
+# nosec
+SECRET_KEY = 'django-insecure-2^t2#r4+%dx&&lr-o!-t)5-(+1o4es#fs3#%*$-4x4)9h1n0vo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,7 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api_lab',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,3 +126,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# ---------------------------------------------------------------------------
+# API Lab - Django REST Framework
+# ---------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    # Autenticación por token: fácil de probar con curl y sin CSRF.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # Fail-safe default: todo endpoint exige autenticación salvo que
+    # declare explícitamente lo contrario (AllowAny).
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    # Solo JSON: sin la "browsable API" de DRF (menos superficie expuesta).
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+# Endpoints vulnerables /api/v1/ - APAGADOS salvo que se activen en local.
+# Ver api_lab/flags.py. Nunca configurar esta variable en Render.
+ENABLE_VULNERABLE_API = os.environ.get(
+    'ENABLE_VULNERABLE_API', 'False').lower() == 'true'
