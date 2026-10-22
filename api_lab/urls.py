@@ -7,8 +7,7 @@ api_lab/urls.py  ->  todas las rutas cuelgan de /api/
 """
 from django.urls import include, path
 from rest_framework.authtoken.views import obtain_auth_token
-
-from . import views_v1
+from . import views_v1, views_v2
 
 # Endpoints VULNERABLES: cada vista lleva @vulnerable_endpoint
 v1_patterns = [
@@ -19,7 +18,10 @@ v1_patterns = [
 ]
 
 # Endpoints CORREGIDOS
-v2_patterns = []
+v2_patterns = [
+    path('system/status/', views_v2.system_status, name='system-status'),
+    path('system/info/', views_v2.system_info, name='system-info'),
+]
 
 urlpatterns = [
     path('auth/token/', obtain_auth_token, name='api-token'),
