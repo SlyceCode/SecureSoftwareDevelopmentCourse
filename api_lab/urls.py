@@ -1,4 +1,3 @@
-
 """
 api_lab/urls.py  ->  todas las rutas cuelgan de /api/
 
@@ -15,6 +14,8 @@ from . import views_v1
 v1_patterns = [
     path('system/status/', views_v1.system_status, name='system-status'),
     path('system/info/', views_v1.system_info, name='system-info'),
+    path('incidents/', views_v1.incident_list, name='incident-list'),
+    path('incidents/<int:pk>/', views_v1.incident_detail, name='incident-detail'),
 ]
 
 # Endpoints CORREGIDOS
